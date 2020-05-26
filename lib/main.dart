@@ -38,19 +38,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        //Sobrescreve ícone nativo de voltar da AppBar e realiza verificação se pode ou não fechar rotas
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            if(Navigator.canPop(context))
+              Navigator.pop(context);
+          },
+        )
       ),
       body: Center(
         child: Column(
@@ -171,7 +171,7 @@ class _Screen3State extends State<Screen3> {
   Widget build(BuildContext context) {
     final settingsRoute = ModalRoute.of(context).settings;
     print('Nome da rota: ${settingsRoute.name}\n' +
-          'Argumentos: ${settingsRoute.arguments}');
+        'Argumentos: ${settingsRoute.arguments}');
 
     return Scaffold(
       appBar: AppBar(
@@ -190,7 +190,57 @@ class _Screen3State extends State<Screen3> {
                 Navigator.pop(context, "Parâmetro Result");
               },
             ),
+            RaisedButton(
+              child: Text('popUntil'),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName("/"));
+              },
+            ),
+            RaisedButton(
+              child: Text('pushAndRemoveUntil'),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(builder: (context) => Screen4()),
+                    //Destroi todas as rotas anteriores, já que predicado não vai achar equivalência
+                    (route) => false
+                    //Destroi todas as rotas até chegar na rota especificada
+                    //ModalRoute.withName("/")
+                    );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
+class Screen4 extends StatefulWidget {
+  @override
+  _Screen4State createState() => _Screen4State();
+}
+
+class _Screen4State extends State<Screen4> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Tela 4"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Voltar: ',
+            ),
+            RaisedButton(
+              child: Text('com parâmetro'),
+              onPressed: () {
+                Navigator.pop(context, "Parâmetro Result");
+              },
+            ),
             RaisedButton(
               child: Text('popUntil'),
               onPressed: () {
