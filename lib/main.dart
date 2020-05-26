@@ -42,16 +42,30 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        //Sobrescreve ícone nativo de voltar da AppBar e realiza verificação se pode ou não fechar rotas
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            if(Navigator.canPop(context))
-              Navigator.pop(context);
-          },
-        )
-      ),
+          title: Text(widget.title),
+          //Sobrescreve ícone nativo de voltar da AppBar e realiza verificação se pode ou não fechar rotas
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              if (Navigator.canPop(context))
+                Navigator.pop(context);
+              else
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text("Sobrescrita do Botão Voltar Nativo"),
+                    content: Text("Não é possível retornar, pois não há rotas anteriores"),
+                    actions: [
+                      CloseButton(),
+                    ],
+                    elevation: 30,
+                    shape: RoundedRectangleBorder(),
+                  ),
+                  barrierDismissible:
+                      false, //não deixa clicar fora do alert para dispensar.
+                );
+            },
+          )),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
