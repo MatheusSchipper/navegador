@@ -14,7 +14,16 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        "/": (context) => MyHomePage(
+              title: "Home Page",
+            ),
+        //Rotas podem ser declaradas na main ou em cada página
+        "/screen2": (context) => Screen2(),
+        //"/screen3": (context) => Screen3(),
+      },
+
+      // home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -48,23 +57,30 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'Navegação por:',
+            ),
+            RaisedButton(
+              child: Text('push'),
+              onPressed: () {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => Screen2()));
+              },
             ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              'Rotas nomeadas:',
+            ),
+            RaisedButton(
+              child: Text('Rota screen2'),
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  "/screen2",
+                );
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => Screen2()));
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
@@ -96,7 +112,7 @@ class _Screen2State extends State<Screen2> {
               },
             ),
             RaisedButton(
-              child: Text('push'),
+              child: Text('push esperando parâmetro no retorno'),
               onPressed: () async {
                 final result = await Navigator.push(context,
                     CupertinoPageRoute(builder: (context) => Screen3()));
@@ -109,11 +125,33 @@ class _Screen2State extends State<Screen2> {
                       CloseButton(),
                     ],
                     elevation: 30,
-                    backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(),
                   ),
-                  barrierDismissible: false,//não deixa clicar fora do alert para dispensar.
+                  barrierDismissible:
+                      false, //não deixa clicar fora do alert para dispensar.
                 );
+              },
+            ),
+            Text('Rotas nomeadas durante a navegação'),
+            RaisedButton(
+              child: Text('Rota screen3'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => Screen3(),
+                        settings: RouteSettings(name: "/screen3")));
+              },
+            ),
+            RaisedButton(
+              child: Text('Rota screen3 com args'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => Screen3(),
+                        settings: RouteSettings(
+                            name: "/screen3", arguments: "argumento")));
               },
             ),
           ],
@@ -131,6 +169,10 @@ class Screen3 extends StatefulWidget {
 class _Screen3State extends State<Screen3> {
   @override
   Widget build(BuildContext context) {
+    final settingsRoute = ModalRoute.of(context).settings;
+    print('Nome da rota: ${settingsRoute.name}\n' +
+          'Argumentos: ${settingsRoute.arguments}');
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Tela 3"),
@@ -146,6 +188,13 @@ class _Screen3State extends State<Screen3> {
               child: Text('com parâmetro'),
               onPressed: () {
                 Navigator.pop(context, "Parâmetro Result");
+              },
+            ),
+
+            RaisedButton(
+              child: Text('popUntil'),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName("/"));
               },
             )
           ],
