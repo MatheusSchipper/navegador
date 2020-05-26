@@ -92,9 +92,12 @@ class _Screen2State extends State<Screen2> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          //Caso o usuário volte utilziando o voltar da AppBar, o parâmetro não é passado.
+          final result = await Navigator.push(
               context, CupertinoPageRoute(builder: (context) => Screen3()));
+          print(result);
+
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
