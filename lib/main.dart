@@ -86,22 +86,39 @@ class _Screen2State extends State<Screen2> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'Navegação por: ',
+            ),
+            RaisedButton(
+              child: Text('pushReplacement'),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    CupertinoPageRoute(builder: (context) => Screen3()));
+              },
+            ),
+            RaisedButton(
+              child: Text('push'),
+              onPressed: () async {
+                final result = await Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => Screen3()));
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text("Parâmetro retornado"),
+                    content: Text(result),
+                    actions: [
+                      CloseButton(),
+                    ],
+                    elevation: 30,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(),
+                  ),
+                  barrierDismissible: false,//não deixa clicar fora do alert para dispensar.
+                );
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          //Caso o usuário volte utilziando o voltar da AppBar, o parâmetro não é passado.
-          final result = await Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => Screen3()));
-          print(result);
-
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
@@ -116,25 +133,24 @@ class _Screen3State extends State<Screen3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Screen 3"),
+        title: Text("Tela 3"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'Voltar: ',
             ),
+            RaisedButton(
+              child: Text('com parâmetro'),
+              onPressed: () {
+                Navigator.pop(context, "Parâmetro Result");
+              },
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(context, "Parâmetro Result");
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
