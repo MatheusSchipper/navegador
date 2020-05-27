@@ -93,6 +93,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            Text(
+              'Aula 5:',
+            ),
+            RaisedButton(
+              child: Text('Inherit Widgets'),
+              onPressed: () {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => InheritWidgets()));
+              },
+            ),
           ],
         ),
       ),
@@ -113,12 +123,16 @@ class _Screen2State extends State<Screen2> {
         builder: (context) => AlertDialog(
               title: Text("Sem volta"),
               actions: [
-                RaisedButton(child: Text("Ok"), onPressed: () {
-                  Navigator.pop(context, false);
-                }),
-                RaisedButton(child: Text("Cancelar"), onPressed: () {
-                  Navigator.pop(context, true);
-                }),
+                RaisedButton(
+                    child: Text("Ok"),
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    }),
+                RaisedButton(
+                    child: Text("Cancelar"),
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    }),
               ],
             ));
   }
@@ -129,17 +143,16 @@ class _Screen2State extends State<Screen2> {
       onWillPop: _onWillPopScope,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Screen 2"),
-          leading : IconButton(
-            icon: Icon(Icons.arrow_back),
-            //MaybePop faz com que, tendo um WillPopScope, intercepte o botão voltar,
-            //verificando se pode ou não voltar daquela rota, de acordo com o método
-            //colocado no onWillPop.
-            onPressed: () {
-              Navigator.maybePop(context);
-            },
-          )
-        ),
+            title: Text("Screen 2"),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              //MaybePop faz com que, tendo um WillPopScope, intercepte o botão voltar,
+              //verificando se pode ou não voltar daquela rota, de acordo com o método
+              //colocado no onWillPop.
+              onPressed: () {
+                Navigator.maybePop(context);
+              },
+            )),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -293,6 +306,115 @@ class _Screen4State extends State<Screen4> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CounterProvider extends InheritedWidget {
+  final int counter;
+
+  CounterProvider(this.counter, {Key key, this.child})
+      : super(key: key, child: child);
+
+  final Widget child;
+
+  static CounterProvider of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<CounterProvider>(aspect: CounterProvider);
+  }
+
+  @override
+  bool updateShouldNotify(CounterProvider oldWidget) {
+    return true;
+  }
+}
+
+class InheritWidgets extends StatefulWidget {
+  @override
+  _InheritWidgetsState createState() => _InheritWidgetsState();
+}
+
+class _InheritWidgetsState extends State<InheritWidgets> {
+  int _counter = 0;
+
+  void _increment() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Inherit Widgets Page"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CounterProvider(_counter, child: GreatGrandFather()),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _increment,
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class GreatGrandFather extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.red,
+      width: 400,
+      height: 250,
+      child: GrandFather(),
+    );
+  }
+}
+
+class GrandFather extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        color: Colors.orange,
+        width: 370,
+        height: 220,
+        child: Father(),
+      ),
+    );
+  }
+}
+
+class Father extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        color: Colors.yellow,
+        width: 300,
+        height: 200,
+        child: Child(),
+      ),
+    );
+  }
+}
+
+class Child extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final int counter = CounterProvider.of(context).counter;
+    return Center(
+      child: Container(
+        color: Colors.green,
+        width: 250,
+        height: 150,
+        child: Center(child: Text("Valor: $counter")),
       ),
     );
   }
