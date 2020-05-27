@@ -54,7 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   context: context,
                   builder: (_) => AlertDialog(
                     title: Text("Sobrescrita do Botão Voltar Nativo"),
-                    content: Text("Não é possível retornar, pois não há rotas anteriores"),
+                    content: Text(
+                        "Não é possível retornar, pois não há rotas anteriores"),
                     actions: [
                       CloseButton(),
                     ],
@@ -105,70 +106,99 @@ class Screen2 extends StatefulWidget {
 }
 
 class _Screen2State extends State<Screen2> {
+  Future<bool> _onWillPopScope() async {
+    return showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+              title: Text("Sem volta"),
+              actions: [
+                RaisedButton(child: Text("Ok"), onPressed: () {
+                  Navigator.pop(context, false);
+                }),
+                RaisedButton(child: Text("Cancelar"), onPressed: () {
+                  Navigator.pop(context, true);
+                }),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Screen 2"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Navegação por: ',
-            ),
-            RaisedButton(
-              child: Text('pushReplacement'),
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    CupertinoPageRoute(builder: (context) => Screen3()));
-              },
-            ),
-            RaisedButton(
-              child: Text('push esperando parâmetro no retorno'),
-              onPressed: () async {
-                final result = await Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => Screen3()));
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: Text("Parâmetro retornado"),
-                    content: Text(result),
-                    actions: [
-                      CloseButton(),
-                    ],
-                    elevation: 30,
-                    shape: RoundedRectangleBorder(),
-                  ),
-                  barrierDismissible:
-                      false, //não deixa clicar fora do alert para dispensar.
-                );
-              },
-            ),
-            Text('Rotas nomeadas durante a navegação'),
-            RaisedButton(
-              child: Text('Rota screen3'),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => Screen3(),
-                        settings: RouteSettings(name: "/screen3")));
-              },
-            ),
-            RaisedButton(
-              child: Text('Rota screen3 com args'),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => Screen3(),
-                        settings: RouteSettings(
-                            name: "/screen3", arguments: "argumento")));
-              },
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: _onWillPopScope,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Screen 2"),
+          leading : IconButton(
+            icon: Icon(Icons.arrow_back),
+            //MaybePop faz com que, tendo um WillPopScope, intercepte o botão voltar,
+            //verificando se pode ou não voltar daquela rota, de acordo com o método
+            //colocado no onWillPop.
+            onPressed: () {
+              Navigator.maybePop(context);
+            },
+          )
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Navegação por: ',
+              ),
+              RaisedButton(
+                child: Text('pushReplacement'),
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      CupertinoPageRoute(builder: (context) => Screen3()));
+                },
+              ),
+              RaisedButton(
+                child: Text('push esperando parâmetro no retorno'),
+                onPressed: () async {
+                  final result = await Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Screen3()));
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text("Parâmetro retornado"),
+                      content: Text(result),
+                      actions: [
+                        CloseButton(),
+                      ],
+                      elevation: 30,
+                      shape: RoundedRectangleBorder(),
+                    ),
+                    barrierDismissible:
+                        false, //não deixa clicar fora do alert para dispensar.
+                  );
+                },
+              ),
+              Text('Rotas nomeadas durante a navegação'),
+              RaisedButton(
+                child: Text('Rota screen3'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => Screen3(),
+                          settings: RouteSettings(name: "/screen3")));
+                },
+              ),
+              RaisedButton(
+                child: Text('Rota screen3 com args'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => Screen3(),
+                          settings: RouteSettings(
+                              name: "/screen3", arguments: "argumento")));
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
