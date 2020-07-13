@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "/": (context) => MyHomePage(
-              title: "Home Page",
+              title: "Teste Page",
             ),
         //Rotas podem ser declaradas na main ou em cada página
         "/screen2": (context) => Screen2(),
@@ -69,39 +69,45 @@ class _MyHomePageState extends State<MyHomePage> {
           )),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Navegação por:',
-            ),
-            RaisedButton(
-              child: Text('push'),
-              onPressed: () {
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => Screen2()));
-              },
-            ),
-            Text(
-              'Rotas nomeadas:',
-            ),
-            RaisedButton(
-              child: Text('Rota screen2'),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  "/screen2",
-                );
-              },
-            ),
-            Text(
-              'Aula 5:',
-            ),
-            RaisedButton(
-              child: Text('Inherit Widgets'),
-              onPressed: () {
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => InheritWidgets()));
-              },
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Column(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Navegação por:',
+                ),
+                RaisedButton(
+                  child: Text('push'),
+                  onPressed: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => Screen2()));
+                  },
+                ),
+                Text(
+                  'Rotas nomeadas:',
+                ),
+                RaisedButton(
+                  child: Text('Rota screen2'),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      "/screen2",
+                    );
+                  },
+                ),
+                Text(
+                  'Aula 5:',
+                ),
+                RaisedButton(
+                  child: Text('Inherit Widgets'),
+                  onPressed: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => InheritWidgets()));
+                  },
+                ),
+              ],
             ),
           ],
         ),
